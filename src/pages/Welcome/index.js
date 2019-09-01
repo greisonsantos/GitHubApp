@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
 import asyncStorage from '@react-native-community/async-storage';
 
-import {View, Text, TextInput, TouchableOpacity, StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import styles from './styles';
 
 import api from '~/services/api';
@@ -9,11 +17,12 @@ import api from '~/services/api';
 export default class Welcome extends Component {
   state = {
     username: '',
+    loading: false,
+    error: false,
   };
 
   checkUserExists = async username => {
     const user = await api.get(`/users/${username}`);
-
     console.tron.log(user);
     return user;
   };
@@ -26,18 +35,20 @@ export default class Welcome extends Component {
     const {username} = this.state;
     const {navigation} = this.props;
 
+    this.setState({loading: true});
+
     try {
       await this.checkUserExists(username);
       await this.saveUser(username);
 
       navigation.navigate('Repositories');
     } catch (err) {
-      console.tron.log('user not found');
+      this.setState({loading: false, error: true});
     }
   };
 
   render() {
-    const username = this.state.username;
+    const {username, loading, error} = this.state;
 
     return (
       <View style={styles.container}>
@@ -47,6 +58,8 @@ export default class Welcome extends Component {
         <Text style={styles.text}>
           Para continuar Precisamos que você informe seu User do GItHub
         </Text>
+
+        {error && <Text style={styles.error}>Usuário não encontrado</Text>}
         <View style={styles.form}>
           <TextInput
             style={styles.input}
@@ -59,7 +72,11 @@ export default class Welcome extends Component {
           />
 
           <TouchableOpacity style={styles.button} onPress={this.signIn}>
-            <Text style={styles.buttonText}>Prosseguir </Text>
+            {loading ? (
+              <ActivityIndicator size="large" color="#FFF" />
+            ) : (
+              <Text style={styles.buttonText}> Prosseguir</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
