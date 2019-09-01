@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import asyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   View,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   StatusBar,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import styles from './styles';
 
@@ -28,7 +27,7 @@ export default class Welcome extends Component {
   };
 
   saveUser = async username => {
-    await asyncStorage.setItem('@Githuber:username', username);
+    await AsyncStorage.setItem('@Githuber:username', username);
   };
 
   signIn = async () => {
