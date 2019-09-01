@@ -1,11 +1,11 @@
 import React from 'react';
 
 import '~/config/ReactotronConfig';
-
 import {Provider} from 'react-redux';
 import store from './store';
 
 import Routes from '~/routes';
+console.tron.log('asdsa');
 
 const App = () => (
   <Provider store={store}>
